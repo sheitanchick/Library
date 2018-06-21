@@ -117,7 +117,7 @@ namespace Library.Controllers
                 _db.Users.Add(user);
                 _db.SaveChanges();
 
-                return Json(true);
+                return Json(new { result = "true"});
             }
         }
 

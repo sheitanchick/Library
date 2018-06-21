@@ -9,7 +9,7 @@
         <th style="border-right: none;"></th>
       </tr>
       <tr v-for="user in users">
-        <td>{{ user.name}}</td>
+        <td>{{user.name}}</td>
         <td>{{user.email}}</td>
         <td><button @click="DeleteUser(user.id)"> Delete User</button></td>
         <td><router-link tag="button" :to="{ path: '/edit-user/' + user.id}">Edit User</router-link></td>
@@ -40,7 +40,11 @@
   },
 
   DeleteUser: function(id) {
-  this.$http.get("api/Api/deleteuser/" + id).then((res) => {if(res.data.result == "true") this.getUsers();});
+    this.$http.get("api/Api/deleteuser/" + id)
+      .then((res) => {
+        if (res.data.result == "true") this.getUsers();
+        else alert(res.data.errors);
+      });
   }
   }
 

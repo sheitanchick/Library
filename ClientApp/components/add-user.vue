@@ -16,25 +16,27 @@
   import axios from 'axios'
 
   export default {
-  data () {
-  return {
-  user: {
-  id: 0,
-  name: "",
-  email: ""
-  }
-  }
-  },
+    data() {
+      return {
+        user: {
+          id: 0,
+          name: "",
+          email: ""
+        }
+      }
+    },
 
   props: ["id"],
-  created () {
-  },
 
-  methods: {
-    submitChanges: function () {
-      this.$http.post("/api/Api/AddUser", "Name=" + this.user.name + "&Email=" + this.user.email).then((res) => { this.$router.push({path: "/"})});
+    methods: {
+      submitChanges: function () {
+        this.$http.post("/api/Api/AddUser", "Name=" + this.user.name + "&Email=" + this.user.email)
+          .then((res) => {
+            if (res.data.result == "true") this.$router.push({ path: "/" });
+            else alert(res.data.errors);
+          });
+      }
     }
-  }
   }
 
 </script>

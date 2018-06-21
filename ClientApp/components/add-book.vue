@@ -37,7 +37,11 @@
 
   methods: {
     submitChanges: function () {
-      this.$http.post("/api/Api/AddBook", "Name=" + this.book.name + "&Author=" + this.book.author + "&AvailableQuantity=" + this.book.availableQuantity).then((res) => { if(res.data.result == "true") this.$router.push({path : "/books"})});
+      this.$http.post("/api/Api/AddBook", "Name=" + this.book.name + "&Author=" + this.book.author + "&AvailableQuantity=" + this.book.availableQuantity)
+        .then((res) => {
+          if (res.data.result == "true") this.$router.push({ path: "/books" });
+          else alert(res.data.errors);
+        });
     }
   }
   }

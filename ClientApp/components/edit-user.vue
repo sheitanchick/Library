@@ -37,10 +37,13 @@
   },
   getUser: function(id) {
   let res = this.$http.get("/api/Api/GetUser/" + this.$route.params.id).then((res) => {this.user = res.data});
-  console.log(res);
   },
     submitChanges: function () {
-      this.$http.post("/api/Api/EditUser", "ID=" + this.user.id + "&Name=" + this.user.name + "&Email=" + this.user.email);
+      this.$http.post("/api/Api/EditUser", "ID=" + this.user.id + "&Name=" + this.user.name + "&Email=" + this.user.email)
+        .then((res) => {
+          if (res.data.result == "true") alert("Successfully updated");
+          else alert(res.data.errors);
+        });
   }
   }
 

@@ -42,7 +42,11 @@
         },
 
         DeleteBook: function (id) {
-          this.$http.get("api/Api/deleteBook/" + id).then((res) => { if (res.data.result == "true") this.getBooks(); });
+          this.$http.get("api/Api/deleteBook/" + id)
+            .then((res) => {
+              if (res.data.result == "true") this.getBooks();
+              else alert(res.data.errors);
+            });
         }
       }
 

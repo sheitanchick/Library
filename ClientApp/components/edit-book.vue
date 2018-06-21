@@ -38,10 +38,15 @@
 
     methods: {
       getBook: function (id) {
-        let res = this.$http.get("/api/Api/GetBook/" + this.$route.params.id).then((res) => { this.book = res.data });
+        let res = this.$http.get("/api/Api/GetBook/" + this.$route.params.id)
+          .then((res) => { this.book = res.data });
       },
       submitChanges: function () {
-        this.$http.post("/api/Api/EditBook", "ID=" + this.book.id + "&Name=" + this.book.name + "&Author=" + this.book.author + "&AvailableQuantity=" + this.book.availableQuantity);
+        this.$http.post("/api/Api/EditBook", "ID=" + this.book.id + "&Name=" + this.book.name + "&Author=" + this.book.author + "&AvailableQuantity=" + this.book.availableQuantity)
+          .then((res) => {
+            if (res.data.result == "true") alert("Successfully updated");
+            else alert(res.data.errors);
+          });
   }
   }
 

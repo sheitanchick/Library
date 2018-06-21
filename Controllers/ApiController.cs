@@ -43,7 +43,7 @@ namespace Library.Controllers
             if (storeUser != null)
             {
 
-                if (user.Name.Trim() == "" && user.Name == null)
+                if (user.Name == null && user.Name.Trim() == "")
                 {
                     errors.Add("Name is empty!");
                 }
@@ -107,11 +107,11 @@ namespace Library.Controllers
             User existingUser = _db.Users.Where(o => o.Email == user.Email).FirstOrDefault();
 
             if (user.Name == null || user.Name.Trim() == "") errors.Add("Type a name, please!");
-            if (existingUser != null)
-            {
-                errors.Add("User with this email already exist!");
-                return Json(new { result = "false", errors });
-            }
+            if (user.Email == null || user.Email.Trim() == "") errors.Add("Type an email, please!");
+
+            if (existingUser != null) errors.Add("User with this email already exist!");
+
+            if(errors.Count > 0 ) return Json(new { result = "false", errors });
             else
             {
                 _db.Users.Add(user);
@@ -196,7 +196,7 @@ namespace Library.Controllers
             if (storeBook != null)
             {
 
-                if (book.Name.Trim() == "" && book.Name == null)
+                if (book.Name == null && book.Name.Trim() == "")
                 {
                     errors.Add("Book name is empty!");
                 }
@@ -264,7 +264,7 @@ namespace Library.Controllers
             else
             {
                 //a bit awkward msg
-                errors.Add("We don't have this book :(");
+                errors.Add("We don't have this book now, you gotta wait :(");
                 return Json(new { result = "false", errors });
             }
         }

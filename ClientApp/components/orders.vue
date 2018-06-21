@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-link tag="button" :to="{ path: '/book-ordering'}">Order a book</router-link>
-    <a href="" target="_blank">Export bad guys to excel</a>
+    <a href="/api/api/GetExcel" target="_blank">Export bad guys to excel</a>
       <table>
         <tr>
           <th>Order Id</th>
@@ -11,7 +11,8 @@
           <th>Booking Date</th>
           <th>Expected Date</th>
           <th>Status</th>
-          <th></th>
+          <th>Days after due date</th>
+          <th class="last"></th>
         </tr>
         <tr v-for="order in Orders">
           <td>{{ order.id}}</td>
@@ -22,8 +23,12 @@
           <td>{{order.expectedReturnDate.substring(0, 10) }}</td>
           <td v-if="order.actualReturnDate != null">Returned</td>
           <td v-else>Not returned</td>
-          <td v-if="order.actualReturnDate != null"></td>
-          <td v-else><button @click="bookReturned(order.id)"> Mark as returned </button></td>
+
+          <td v-if="order.daysAfterDue > 0" style="background-color:red;text-align:center;">{{order.daysAfterDue}} day(s)</td>
+          <td v-else style="text-align:center;">—</td>
+
+          <td v-if="order.actualReturnDate != null" class="last"></td>
+          <td v-else class="last"><button @click="bookReturned(order.id)"> Mark as returned </button></td>
         </tr>
       </table>
   </div>
@@ -55,15 +60,6 @@ import { Date } from 'core-js';
         bookReturned: function (id) {
           this.$http.get("api/Api/BookReturned/" + id).then((res) => { this.getOrders() });
         },
-        /*getBooks: function () {
-          let res = this.$http.get("api/Api/GetBooks").then((res) => { this.books = res.data });
-        },
-
-        DeleteBook: function (id) {
-          this.$http.get("api/Api/deleteBook/" + id).then((res) => { if (res.data.result == "true") this.getBooks(); });
-        }
-      },*/
-        
 
       },
 
@@ -78,9 +74,17 @@ import { Date } from 'core-js';
   th {
     border-right: solid 1px;
     border-bottom: solid 1px;
+    padding-left: 5px;
+    padding-right: 5px;
   }
 
   td {
     border-right: solid 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .last {
+    border-right: none;
   }
 </style>

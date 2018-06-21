@@ -273,13 +273,59 @@ namespace Library.Controllers
         public JsonResult GetOrders()
         {
             var orders = _db.Orders.ToList();
-            var book1 = orders.FirstOrDefault().Book;
+
             List<object> result = new List<object>();
             foreach (Order ord in orders)
             {
                 var user = _db.Users.Where(o => o.ID == ord.UserID).FirstOrDefault();
                 var book = _db.Books.Where(o => o.ID == ord.BookID).FirstOrDefault();
-                result.Add(new { id = ord.ID, book = new { name = book.Name, author = book.Author, id = book.ID }, user = new { id = user.ID, name = user.Name }, bookingDate = ord.BookingDate, expectedReturnDate = ord.ExpectedReturnDate, actualReturnDate = ord.ActualReturnDate, daysAfterDue = (DateTime.Now - ord.ExpectedReturnDate).Days });
+
+                if (ord.ActualReturnDate != null && ord.ExpectedReturnDate.Date < ord.ActualReturnDate.Value.Date)
+                {
+                    result.Add(new
+                    {
+                        id = ord.ID,
+                        book = new
+                        {
+                            name = book.Name,
+                            author = book.Author,
+                            id = book.ID
+                        },
+                        user = new
+                        {
+                            id = user.ID,
+                            name = user.Name
+                        },
+                        bookingDate = ord.BookingDate,
+                        expectedReturnDate = ord.ExpectedReturnDate,
+                        actualReturnDate = ord.ActualReturnDate,
+                        daysAfterDue = (ord.ActualReturnDate.Value.Date - ord.ExpectedReturnDate.Date).Days
+                    });
+                }
+                else
+                {
+                    result.Add(new
+                    {
+                        id = ord.ID,
+                        book = new
+                        {
+                            name = book.Name,
+                            author = book.Author,
+                            id = book.ID
+                        },
+                        user = new
+                        {
+                            id = user.ID,
+                            name = user.Name
+                        },
+                        bookingDate = ord.BookingDate,
+                        expectedReturnDate = ord.ExpectedReturnDate,
+                        actualReturnDate = ord.ActualReturnDate,
+                        daysAfterDue = (DateTime.Now.Date - ord.ExpectedReturnDate.Date).Days
+                    });
+                }
+
+                
             }
             return Json(result);
         }

@@ -29,10 +29,13 @@ namespace Library.Controllers
         [HttpGet("[action]/{id}")]
         public JsonResult GetUser(int id)
         {
-            var users = _db.Users.ToList();
+            User user = _db.Users.Where(o => o.ID == id).FirstOrDefault();
 
-            User user = users.Where(o => o.ID == id).FirstOrDefault();
-            return Json(new { Name = user.Name, Email = user.Email, ID = user.ID });
+            if (user == null)
+            {
+                return Json(new { result = "false", errors = "User doesn't exist!" });
+            }
+            else return Json(new { user.Name, user.Email, user.ID });
         }
 
         [HttpPost("[action]")]
@@ -280,7 +283,7 @@ namespace Library.Controllers
                 var user = _db.Users.Where(o => o.ID == ord.UserID).FirstOrDefault();
                 var book = _db.Books.Where(o => o.ID == ord.BookID).FirstOrDefault();
 
-                if (ord.ActualReturnDate != null && ord.ExpectedReturnDate.Date < ord.ActualReturnDate.Value.Date)
+                if (ord.ActualReturnDate != null & ord.ExpectedReturnDate <= ord.ActualReturnDate)
                 {
                     result.Add(new
                     {

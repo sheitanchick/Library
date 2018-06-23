@@ -6,6 +6,8 @@
     <button @click="filtered = !filtered" v-if="filtered==false">Show only bad guys (overdue and hasn't returned)</button>
     <br />
     <a href="/api/api/GetExcel" target="_blank">Export bad guys to excel</a>
+    <booking></booking>
+    <preloader v-show="loading == true"></preloader>
     <table>
       <tr>
         <th>Order Id</th>
@@ -38,15 +40,22 @@
 
 <script>
   import axios from 'axios'
-import { Date } from 'core-js';
+  import { Date } from 'core-js';
+  import booking from './book-ordering.vue'
+  import { app } from '../app';
+  import preloader from './preloader.vue'
 
   export default {
     data() {
       return {
         Orders: [],
-        filtered: false
+        filtered: false,
+        loading: false,
+        _this: this
       }
     },
+
+    name: "ord",
 
 
 
@@ -57,11 +66,21 @@ import { Date } from 'core-js';
     methods:
       {
         getOrders: function () {
-          this.$http.get("api/Api/GetOrders").then((res) => { this.Orders = res.data });
+          this.loading = true;
+          return this.$http.get("api/Api/GetOrders")
+            .then((res) => {
+              this.Orders = res.data;
+              this.loading = false;
+            });
         },
 
         bookReturned: function (id) {
-          this.$http.get("api/Api/BookReturned/" + id).then((res) => { this.getOrders() });
+          this.loading = true;
+          this.$http.get("api/Api/BookReturned/" + id)
+            .then((res) => {
+              this.getOrders();
+              //this.loading = false;
+            });
         },
 
       },
@@ -73,6 +92,11 @@ import { Date } from 'core-js';
           else return (order.daysAfterDue > 0 & order.actualReturnDate == null);
         })
       }
+    },
+
+    components: {
+      'booking': booking,
+      "preloader": preloader,
     }
   }
 

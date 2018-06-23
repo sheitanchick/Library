@@ -5,7 +5,8 @@
                 <nav-menu params="route: route"></nav-menu>
             </div>
             <div class="col-sm-9">
-                <router-view></router-view>
+              <router-view></router-view>
+              <router-view name="orders"></router-view>
             </div>
         </div>
     </div>

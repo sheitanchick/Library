@@ -15,6 +15,7 @@ export const routes = [
   { name: 'edit-book', path: '/edit-book/:id', component: EditBook, display: 'Edit Book', hide: true },
   { name: 'add-book', path: '/add-book', component: AddBook, display: 'Add Book' },
   { name: 'book-ordering', path: '/book-ordering', component: BookOrdering, display: 'Order a book' },
-  { name: 'orders', path: '/orders', component: Orders, display: 'Orders' },
+  { name: 'orders', path: '/orders', components: { "orders": Orders, "booking": BookOrdering }, display: 'Orders' },
+
 
 ]

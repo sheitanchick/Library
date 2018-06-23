@@ -1,9 +1,12 @@
 <template>
   <div>
+    <preloader v-show="loading == true"></preloader>
+
+    <h1>New order</h1>
     <span> Choose book: </span>
     <select v-model="BookID">
       <option v-for="book in Books" v-bind:value="book.id">
-        {{ book.name }} {{ book.author}}
+        "{{ book.name }}" by {{ book.author}}
       </option>
     </select>
 
@@ -24,7 +27,8 @@
 
 <script>
   import axios from 'axios'
-import { Date } from 'core-js';
+  import { Date } from 'core-js';
+  import preloader from './preloader.vue'
 
   export default {
     data() {
@@ -35,14 +39,20 @@ import { Date } from 'core-js';
         UserID: 0,
         BookingDate: Date.now(),
         ExpectedReturnDate: null,
-        ActualReturnDate: null
+        ActualReturnDate: null,
+        loading: false
       }
+    },
+
+    components: {
+      "preloader": preloader
     },
 
 
   created () {
     this.getBooks();
     this.getUsers();
+    console.log(this.$parent.$options.methods);
   },
 
     methods:
@@ -56,10 +66,23 @@ import { Date } from 'core-js';
         },
 
         order: function () {
+          this.loading = true;
           this.$http.post("api/Api/AddOrder", "BookID=" + this.BookID + "&UserID=" + this.UserID + "&ExpectedReturnDate=" + this.ExpectedReturnDate)
             .then((res) => {
-              if (res.data.result == "true") this.$router.push({ path: "/books" });
-              else alert(res.data.errors[0]);
+              if (res.data.result == "true" & this.$route.path == "/orders") {
+                //this.$parent.$options.methods.getOrders();
+                this.loading = false;
+                console.log(this.$route.path);
+              }
+              else if (res.data.result == "true" & this.$route.path != "/orders") {
+                this.$router.push({ path: "/books" });
+                this.loading = false;
+                console.log(this.$route.path);
+              }
+              else {
+                this.loading = false;
+                alert(res.data.errors);
+              }
             });
         }
       }

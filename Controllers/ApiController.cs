@@ -356,7 +356,7 @@ namespace Library.Controllers
         [HttpGet("[action]")]
         public ActionResult GetExcel()
         {
-            var fileDownloadName = "Guys-" + DateTime.Now.Date + ".xlsx";
+            var fileDownloadName = "Guys-" + DateTime.Now.ToString("F") + ".xlsx";
             const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
             var data = new List<string[]>();

@@ -16,9 +16,9 @@ namespace Library.Excel
             {
                 ExcelWorksheet sheet = excel.Workbook.Worksheets.Add("Gays");
 
-                
+                var address = "A1:" + (char)('A'  + (headers.Length - 1) ) + "1";
 
-                var headCells = sheet.Cells["A1:F1"];
+                var headCells = sheet.Cells[address];
                 headCells.Style.Font.Bold = true;
                 headCells.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                 headCells.Style.Fill.BackgroundColor.SetColor(Color.Yellow);

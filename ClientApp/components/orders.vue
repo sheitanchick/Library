@@ -7,7 +7,7 @@
     <button @click="sort()">The worst guys at the top(kinda sorting)</button>
     <br />
     <a href="/api/api/GetExcel" target="_blank">Export bad guys to excel</a>
-    <booking></booking>
+    <booking @rerender="getOrders()"></booking>
     <preloader v-show="loading == true"></preloader>
     <table>
       <tr>
@@ -21,7 +21,7 @@
         <th>Days after due date</th>
         <th class="last"></th>
       </tr>
-      <tr v-for="order in filteredList">
+      <tr v-for="order in filteredList" class="order-line">
         <td>{{ order.id}}</td>
         <td>{{ order.user.name }}</td>
         <td>{{ order.book.name }}</td>
@@ -64,6 +64,10 @@ import Vue from 'vue';
 
     created() {
       this.getOrders()
+    },
+
+    mounted() {
+      //this.$on('rerender', this.getOrders());
     },
 
     methods:
@@ -149,5 +153,9 @@ import Vue from 'vue';
 
   .last {
     border-right: none;
+  }
+
+  .order-line:hover {
+    background-color: lightgrey;
   }
 </style>

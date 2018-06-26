@@ -70,6 +70,7 @@
             .then((res) => {
               if (res.data.result == "true" & this.$route.path == "/orders") {
                 //this.$parent.$options.methods.getOrders();
+                this.$emit('rerender');
                 this.loading = false;
                 console.log(this.$route.path);
               }

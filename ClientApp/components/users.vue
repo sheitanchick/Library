@@ -12,7 +12,8 @@
         <td>{{user.name}}</td>
         <td>{{user.email}}</td>
         <td><button @click="DeleteUser(user.id)"> Delete User</button></td>
-        <td><router-link tag="button" :to="{ path: '/edit-user/' + user.id}">Edit User</router-link></td>
+        <td><router-link v-show="false" tag="button" :to="{ path: '/edit-user/' + user.id}">Edit User</router-link></td>
+        <td><router-link tag="button" :to="{ name: 'edit-user', params: {id: user.id}}">Edit User</router-link></td>
       </tr>
     </table>
   </div>
@@ -22,32 +23,29 @@
   import axios from 'axios'
 
   export default {
-  data () {
-  return {
-  users : []
-  }
-  },
+    data() {
+      return {
+        users: []
+      }
+    },
 
+    created() {
+      this.getUsers()
+    },
 
-  created () {
-  this.getUsers()
-  },
+    methods: {
+      getUsers: function () {
+        let res = this.$http.get("api/Api/GetUsers").then((res) => { this.users = res.data });
+      },
 
-  methods: {
-  getUsers: function() {
-  let res = this.$http.get("api/Api/GetUsers").then((res) => {this.users = res.data});
-  console.log(res);
-  },
-
-  DeleteUser: function(id) {
-    this.$http.get("api/Api/deleteuser/" + id)
-      .then((res) => {
-        if (res.data.result == "true") this.getUsers();
-        else alert(res.data.errors);
-      });
-  }
-  }
-
+      DeleteUser: function (id) {
+        this.$http.get("api/Api/deleteuser/" + id)
+          .then((res) => {
+            if (res.data.result == "true") this.getUsers();
+            else alert(res.data.errors);
+          });
+      }
+    }
   }
 
 </script>

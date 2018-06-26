@@ -4,6 +4,7 @@
     <br />
     <button @click="filtered = !filtered" v-if="filtered==true">Show all</button>
     <button @click="filtered = !filtered" v-if="filtered==false">Show only bad guys (overdue and hasn't returned)</button>
+    <button @click="sort()">The worst guys at the top(kinda sorting)</button>
     <br />
     <a href="/api/api/GetExcel" target="_blank">Export bad guys to excel</a>
     <booking></booking>
@@ -40,18 +41,20 @@
 
 <script>
   import axios from 'axios'
-  import { Date } from 'core-js';
+  import { Date, Array } from 'core-js';
   import booking from './book-ordering.vue'
   import { app } from '../app';
   import preloader from './preloader.vue'
+import Vue from 'vue';
 
   export default {
     data() {
       return {
         Orders: [],
+        tempArr: [],
         filtered: false,
         loading: false,
-        _this: this
+        sortedAsc: false
       }
     },
 
@@ -60,16 +63,18 @@
 
 
     created() {
-      this.getOrders()
+      this.getOrders(),
+        console.log(this)
     },
 
     methods:
       {
         getOrders: function () {
           this.loading = true;
+          console.log(this.sortedAsc);
           return this.$http.get("api/Api/GetOrders")
             .then((res) => {
-              this.Orders = res.data;
+              this.Orders = this.tempArr = res.data;
               this.loading = false;
             });
         },
@@ -78,19 +83,47 @@
           this.loading = true;
           this.$http.get("api/Api/BookReturned/" + id)
             .then((res) => {
-              this.getOrders();
-              //this.loading = false;
+              if (res.data.result == "true") {
+                this.Orders.forEach((elem) => {
+                  if (elem.id == id) elem.actualReturnDate = Date.now();
+                })
+                this.loading = false;
+              }
+              else {
+                alert(res.data.errors);
+                this.loading = false;
+              }
             });
         },
 
+        sort: function (array) {
+          this.tempArr = this.Orders;
+          if (this.sortedAsc == false) {
+            this.sortedAsc = true;
+            this.tempArr.sort((a, b) => { return a.daysAfterDue > b.daysAfterDue ? 1 : -1 });
+          }
+          else {
+            this.sortedAsc = false;
+            this.tempArr.sort((a, b) => { return a.daysAfterDue < b.daysAfterDue ? 1 : -1 });
+          }
+        }
       },
 
     computed: {
-      filteredList: function() {
-        return this.Orders.filter((order) => {
-          if (this.filtered == false) return true;
-          else return (order.daysAfterDue > 0 & order.actualReturnDate == null);
-        })
+
+      filteredList: {
+        get: function () {
+          return this.tempArr.filter((order) => {
+            if (this.filtered == false) {
+              return true;
+            }
+            else return (order.daysAfterDue > 0 & order.actualReturnDate == null);
+          })
+        },
+
+        set: function (newArr) {
+          Vue.set(this.tempArr, null, newArr);
+        }
       }
     },
 

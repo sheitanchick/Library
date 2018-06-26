@@ -276,12 +276,14 @@ namespace Library.Controllers
         public JsonResult GetOrders()
         {
             var orders = _db.Orders.ToList();
+            var users = _db.Users.ToList();
+            var books = _db.Books.ToList();
 
             List<object> result = new List<object>();
             foreach (Order ord in orders)
             {
-                var user = _db.Users.Where(o => o.ID == ord.UserID).FirstOrDefault();
-                var book = _db.Books.Where(o => o.ID == ord.BookID).FirstOrDefault();
+                var user = users.Where(o => o.ID == ord.UserID).FirstOrDefault();
+                var book = books.Where(o => o.ID == ord.BookID).FirstOrDefault();
 
                 if (ord.ActualReturnDate != null & ord.ExpectedReturnDate <= ord.ActualReturnDate)
                 {

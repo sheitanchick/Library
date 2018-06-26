@@ -9,7 +9,7 @@ import Orders from 'components/orders'
  
 export const routes = [
   { name: 'users', path: '/', component: Users, display: 'Customers' },
-  { name: 'edit-user', path: '/edit-user/:id', component: EditUser, display: 'Edit User', hide: true },
+  { name: 'edit-user', path: '/edit-user/:id', component: EditUser, display: 'Edit User', props: true, hide: true },
   { name: 'add-user', path: '/add-user', component: AddUser, display: 'Add User' },
   { name: 'books', path: '/books', component: Books, display: 'Books' },
   { name: 'edit-book', path: '/edit-book/:id', component: EditBook, display: 'Edit Book', hide: true },

@@ -363,11 +363,14 @@ namespace Library.Controllers
             var headers = new string[] { "Customer", "Book name", "Author", "Booking day", "Expected return date", "Days after duedate"};
 
             var overdueOrders = _db.Orders.Where(o => o.ActualReturnDate == null & (DateTime.Now.Date - o.ExpectedReturnDate.Date).Days > 0).ToList();
+            var users = _db.Users.ToList();
+            var books = _db.Books.ToList();
+
 
             foreach (Order ord in overdueOrders)
             {
-                var user = _db.Users.Where(o => o.ID == ord.UserID).FirstOrDefault();
-                var book = _db.Books.Where(o => o.ID == ord.BookID).FirstOrDefault();
+                var user = users.Where(o => o.ID == ord.UserID).FirstOrDefault();
+                var book = books.Where(o => o.ID == ord.BookID).FirstOrDefault();
 
                 data.Add(new string[] {
                     user.Name,

@@ -63,15 +63,13 @@ import Vue from 'vue';
 
 
     created() {
-      this.getOrders(),
-        console.log(this)
+      this.getOrders()
     },
 
     methods:
       {
         getOrders: function () {
           this.loading = true;
-          console.log(this.sortedAsc);
           return this.$http.get("api/Api/GetOrders")
             .then((res) => {
               this.Orders = this.tempArr = res.data;

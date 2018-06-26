@@ -52,7 +52,6 @@
   created () {
     this.getBooks();
     this.getUsers();
-    console.log(this.$parent.$options.methods);
   },
 
     methods:
